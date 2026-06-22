@@ -29,7 +29,7 @@
             position: relative;
         }
 
-        /* ===== ПЛАВАЮЩИЕ ЭМОДЗИ (фон) - СДЕЛАЛ ЯРЧЕ ===== */
+        /* ===== ПЛАВАЮЩИЕ ЭМОДЗИ (фон) ===== */
         .floating-emojis {
             position: fixed;
             top: 0;
@@ -42,42 +42,44 @@
         }
         .floating-emojis span {
             position: absolute;
-            font-size: 32px;
-            opacity: 0.25;
+            font-size: 34px;
+            opacity: 0.35;
             animation: float 16s infinite ease-in-out;
+            text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
         }
-        .floating-emojis span:nth-child(1) { top: 5%; left: 3%; animation-delay: 0s; font-size: 40px; }
-        .floating-emojis span:nth-child(2) { top: 15%; right: 2%; animation-delay: 2.5s; font-size: 30px; }
-        .floating-emojis span:nth-child(3) { bottom: 20%; left: 1%; animation-delay: 4.5s; font-size: 36px; }
-        .floating-emojis span:nth-child(4) { bottom: 6%; right: 3%; animation-delay: 1.5s; font-size: 38px; }
-        .floating-emojis span:nth-child(5) { top: 40%; left: 0%; animation-delay: 3.5s; font-size: 28px; }
-        .floating-emojis span:nth-child(6) { top: 50%; right: 1%; animation-delay: 5.5s; font-size: 30px; }
-        .floating-emojis span:nth-child(7) { top: 70%; left: 5%; animation-delay: 2s; font-size: 26px; }
-        .floating-emojis span:nth-child(8) { top: 28%; left: 7%; animation-delay: 4s; font-size: 24px; }
-        .floating-emojis span:nth-child(9) { top: 85%; right: 6%; animation-delay: 3s; font-size: 22px; }
-        .floating-emojis span:nth-child(10) { top: 60%; left: 4%; animation-delay: 1s; font-size: 20px; }
+        .floating-emojis span:nth-child(1) { top: 5%; left: 3%; animation-delay: 0s; font-size: 44px; }
+        .floating-emojis span:nth-child(2) { top: 15%; right: 2%; animation-delay: 2.5s; font-size: 32px; }
+        .floating-emojis span:nth-child(3) { bottom: 20%; left: 1%; animation-delay: 4.5s; font-size: 40px; }
+        .floating-emojis span:nth-child(4) { bottom: 6%; right: 3%; animation-delay: 1.5s; font-size: 42px; }
+        .floating-emojis span:nth-child(5) { top: 40%; left: 0%; animation-delay: 3.5s; font-size: 30px; }
+        .floating-emojis span:nth-child(6) { top: 50%; right: 1%; animation-delay: 5.5s; font-size: 32px; }
+        .floating-emojis span:nth-child(7) { top: 70%; left: 5%; animation-delay: 2s; font-size: 28px; }
+        .floating-emojis span:nth-child(8) { top: 28%; left: 7%; animation-delay: 4s; font-size: 26px; }
+        .floating-emojis span:nth-child(9) { top: 85%; right: 6%; animation-delay: 3s; font-size: 24px; }
+        .floating-emojis span:nth-child(10) { top: 60%; left: 4%; animation-delay: 1s; font-size: 22px; }
+        .floating-emojis span:nth-child(11) { top: 10%; left: 12%; animation-delay: 6s; font-size: 28px; }
+        .floating-emojis span:nth-child(12) { bottom: 40%; right: 5%; animation-delay: 3.8s; font-size: 26px; }
 
         @keyframes float {
             0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-            25% { transform: translateY(-20px) rotate(6deg) scale(1.05); }
-            75% { transform: translateY(14px) rotate(-4deg) scale(0.95); }
+            25% { transform: translateY(-22px) rotate(6deg) scale(1.08); }
+            75% { transform: translateY(16px) rotate(-4deg) scale(0.92); }
         }
 
         /* ===== КАРТОЧКА ===== */
         .card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.70);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             max-width: 400px;
             width: 100%;
             border-radius: 36px;
             padding: 35px 25px 30px;
-            box-shadow: 0 16px 48px rgba(180, 120, 100, 0.15);
+            box-shadow: 0 20px 60px rgba(180, 120, 100, 0.20), 0 0 0 1px rgba(255, 255, 255, 0.5);
             text-align: center;
             position: relative;
             z-index: 1;
             min-height: 460px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
         .screen {
@@ -162,7 +164,9 @@
             transform: none;
         }
         .btn-outline {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             border: 1.5px solid #dccfc8;
         }
         .btn-large {
@@ -170,12 +174,21 @@
             font-size: 20px;
             min-width: 160px;
         }
+        .btn-success {
+            background: #a8c4b8;
+            color: white;
+        }
+        .btn-success:active {
+            background: #92b3a6;
+        }
 
         /* ===== ВЫБОР ДАТЫ (КАРТОЧКА) ===== */
         .date-picker-card {
             width: 100%;
             padding: 20px 24px;
-            background: #f8f3f0;
+            background: rgba(248, 243, 240, 0.8);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             border-radius: 24px;
             border: 2px dashed #dccfc8;
             cursor: pointer;
@@ -189,7 +202,7 @@
         .date-picker-card.has-date {
             border-style: solid;
             border-color: #dbb8ae;
-            background: #f5edea;
+            background: rgba(245, 237, 234, 0.8);
         }
         .date-picker-card .placeholder {
             font-size: 18px;
@@ -223,7 +236,7 @@
             font-size: 24px;
         }
         .date-picker-card .selected-date .date-text {
-            background: white;
+            background: rgba(255, 255, 255, 0.7);
             padding: 6px 16px;
             border-radius: 30px;
             font-size: 15px;
@@ -295,7 +308,9 @@
             padding: 0 4px;
         }
         .place-card {
-            background: #f8f3f0;
+            background: rgba(248, 243, 240, 0.8);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             border-radius: 24px;
             padding: 30px 20px 25px;
             text-align: center;
@@ -310,7 +325,7 @@
         }
         .place-card.selected {
             border-color: #dbb8ae;
-            background: #f5edea;
+            background: rgba(245, 237, 234, 0.8);
         }
         .place-card .icon {
             font-size: 44px;
@@ -387,11 +402,19 @@
             opacity: 0.7;
         }
 
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #dccfc8, transparent);
+            margin: 8px 0;
+        }
+
         /* ===== АДАПТАЦИЯ ПОД IPHONE ===== */
         @media (max-width: 420px) {
             .card {
                 padding: 25px 18px 25px;
                 border-radius: 28px;
+                background: rgba(255, 255, 255, 0.75);
             }
             h1 { font-size: 22px; }
             h2 { font-size: 28px; }
@@ -404,11 +427,11 @@
             .date-picker-card { padding: 16px 18px; }
             .date-picker-card .placeholder { font-size: 16px; }
             .date-picker-card .selected-date { font-size: 16px; }
-            .floating-emojis span { font-size: 24px !important; opacity: 0.2; }
+            .floating-emojis span { font-size: 26px !important; opacity: 0.3; }
         }
 
         @media (max-width: 360px) {
-            .card { padding: 20px 12px 20px; }
+            .card { padding: 20px 12px 20px; background: rgba(255, 255, 255, 0.8); }
             .place-card { min-height: 160px; padding: 16px 12px; }
             .place-card .icon { font-size: 30px; }
             .floating-emojis span { display: none; }
@@ -417,7 +440,7 @@
 </head>
 <body>
 
-<!-- ===== ПЛАВАЮЩИЕ ЭМОДЗИ (фон) - ЯРЧЕ ===== -->
+<!-- ===== ПЛАВАЮЩИЕ ЭМОДЗИ (фон) ===== -->
 <div class="floating-emojis">
     <span>☀️</span>
     <span>🌸</span>
@@ -429,6 +452,8 @@
     <span>🌻</span>
     <span>🦋</span>
     <span>🌈</span>
+    <span>🌷</span>
+    <span>🍀</span>
 </div>
 
 <div class="card" id="app">
@@ -511,12 +536,20 @@
         <div class="emoji-big">😌</div>
         <h2>Рад, что ты не отказалась</h2>
         <p class="sub" id="finalDetails">Детали обсудим ближе к дате</p>
-        <div style="background: #f5edea; padding: 15px; border-radius: 30px; width:100%; margin: 10px 0; font-size: 14px; color: #5a4f48;">
+        <div style="background: rgba(245, 237, 234, 0.7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); padding: 15px; border-radius: 30px; width:100%; margin: 10px 0; font-size: 14px; color: #5a4f48;">
             🌸 Я напишу тебе за пару дней до встречи
         </div>
+        
+        <!-- НОВАЯ КНОПКА "ЗАВЕРШИТЬ" -->
+        <button class="btn btn-success" style="width:100%;" onclick="finishAndSave()">
+            Завершить ✅
+        </button>
+        
+        <div class="divider"></div>
+        
         <button class="hidden-btn" id="adminBtn" onclick="showHistory()" style="display:none;">📊 Показать историю</button>
         <button class="hidden-btn danger" id="clearBtn" onclick="clearHistory()" style="display:none;">🗑️ Очистить историю</button>
-        <button class="btn btn-outline" style="margin-top:10px;" onclick="resetAll()">↺ Начать сначала</button>
+        <button class="btn btn-outline" style="margin-top:4px; padding: 10px 20px; font-size: 14px; min-width: 80px;" onclick="resetAll()">↺ Начать сначала</button>
     </div>
 
 </div>
@@ -544,10 +577,15 @@
     };
 
     let selectedDateValue = null;
+    let isFinished = false;
 
     const STORAGE_KEY = 'inviteHistory';
 
-    // ===== РАБОТА С ИСТОРИЕЙ =====
+    // ===== GOOGLE SHEETS =====
+    // ⚠️ ЗАМЕНИ НА СВОЙ URL ОТ APPS SCRIPT
+    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzSQLK1BuFvMOUxTc1IhGCK6W3tNp-ecgXbiqN-1ghW4NWVFmGs7B0H19V-UcSBmvVl/exec/exec';
+
+    // ===== РАБОТА С ИСТОРИЕЙ (ЛОКАЛЬНО) =====
     function getHistory() {
         try {
             return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -572,6 +610,24 @@
         }
     }
 
+    // ===== ОТПРАВКА В GOOGLE SHEETS =====
+    function sendToGoogleSheets(data) {
+        fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(() => {
+            console.log('✅ Данные отправлены в Google Sheets');
+        })
+        .catch((error) => {
+            console.error('❌ Ошибка отправки:', error);
+        });
+    }
+
     // ===== ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ =====
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
@@ -580,12 +636,10 @@
 
     // ===== ЭКРАН 1 =====
     function goYes() {
-        // Просто показываем промежуточный экран
         showScreen('screen1_5');
     }
 
     function goYesFinal() {
-        // Окончательное подтверждение "Да"
         currentAnswers.step1 = 'yes';
         showScreen('screen2');
         document.getElementById('resultEmoji').textContent = '📅';
@@ -594,10 +648,10 @@
         document.getElementById('noBlock').style.display = 'none';
         document.getElementById('yesBlock').style.display = 'flex';
         setupDatePicker();
+        isFinished = false;
     }
 
     function goBackFromConfirm() {
-        // Возврат на первый экран
         showScreen('screen1');
     }
 
@@ -609,11 +663,21 @@
         document.getElementById('resultSub').textContent = '';
         document.getElementById('noBlock').style.display = 'block';
         document.getElementById('yesBlock').style.display = 'none';
+        
+        // Отправляем в Google Sheets
+        sendToGoogleSheets({
+            step1: 'no',
+            date: null,
+            place: null
+        });
+        
+        // Сохраняем локально
         saveHistory({
             step1: 'no',
             date: null,
             place: null
         });
+        isFinished = true;
         checkAdmin();
     }
 
@@ -878,12 +942,6 @@
 
     // ===== ФИНАЛ =====
     function goFinal() {
-        saveHistory({
-            step1: currentAnswers.step1,
-            date: currentAnswers.date,
-            place: currentAnswers.place
-        });
-
         showScreen('screen4');
 
         let dateStr = 'выбранной дате';
@@ -896,7 +954,47 @@
         checkAdmin();
     }
 
-    // ===== АДМИН-ПАНЕЛЬ =====
+    // ===== ФУНКЦИЯ "ЗАВЕРШИТЬ" =====
+    function finishAndSave() {
+        if (isFinished) {
+            alert('Ты уже завершила опрос 😊');
+            return;
+        }
+        
+        if (!currentAnswers.step1) {
+            alert('Что-то пошло не так. Попробуй ещё раз 😊');
+            return;
+        }
+        
+        // Подготавливаем данные для отправки
+        const dataToSend = {
+            step1: currentAnswers.step1,
+            date: currentAnswers.date || null,
+            place: currentAnswers.place || null
+        };
+        
+        // Отправляем в Google Sheets
+        sendToGoogleSheets(dataToSend);
+        
+        // Сохраняем локально (для резерва)
+        saveHistory({
+            step1: currentAnswers.step1,
+            date: currentAnswers.date,
+            place: currentAnswers.place
+        });
+        
+        isFinished = true;
+        
+        alert('🎉 Готово! Твой выбор сохранён. Я напишу тебе ближе к дате. Договорились? 😊');
+        
+        const finishBtn = document.querySelector('.btn-success');
+        finishBtn.textContent = '✅ Уже завершено';
+        finishBtn.style.background = '#d4c9c4';
+        finishBtn.style.cursor = 'default';
+        finishBtn.onclick = null;
+    }
+
+    // ===== АДМИН-ПАНЕЛЬ (только локально) =====
     function checkAdmin() {
         if (window.location.search.includes('admin')) {
             document.getElementById('adminBtn').style.display = 'block';
@@ -907,11 +1005,11 @@
     function showHistory() {
         const history = getHistory();
         if (history.length === 0) {
-            alert('📭 История пока пуста');
+            alert('📭 Локальная история пуста');
             return;
         }
 
-        let msg = '📊 ИСТОРИЯ ОТВЕТОВ САШИ\n';
+        let msg = '📊 ЛОКАЛЬНАЯ ИСТОРИЯ ОТВЕТОВ\n';
         msg += `Всего попыток: ${history.length}\n`;
         msg += '═'.repeat(30) + '\n\n';
 
@@ -932,7 +1030,7 @@
             msg += '\n';
         });
 
-        alert(msg);
+        alert(msg + '\n\n📌 ВСЕ ОТВЕТЫ СМОТРИ В GOOGLE ТАБЛИЦЕ!');
     }
 
     // ===== СБРОС =====
@@ -943,12 +1041,19 @@
             selectedDateValue = null;
             selectedPlace = null;
             currentSlide = 0;
+            isFinished = false;
             document.getElementById('datePicker').value = '';
             updateDateDisplay();
             updateConfirmBtn();
             if (document.getElementById('carouselTrack').children.length > 0) {
                 goToSlide(0);
             }
+            // Восстанавливаем кнопку "Завершить"
+            const finishBtn = document.querySelector('.btn-success');
+            finishBtn.textContent = 'Завершить ✅';
+            finishBtn.style.background = '#a8c4b8';
+            finishBtn.style.cursor = 'pointer';
+            finishBtn.onclick = finishAndSave;
             showScreen('screen1');
         }
     }
