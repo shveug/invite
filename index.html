@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Приглашение</title>
+    <style>
+        /* ===== ЛЕГКАЯ СМЕНА ДИЗАЙНА ===== */
+        :root {
+            --bg: #f7f3f0;
+            --card-bg: #ffffff;
+            --primary: #c7b7b0;
+            --primary-dark: #b3a39c;
+            --primary-light: #f4eeea;
+            --text: #2d2a24;
+            --text-light: #6b625a;
+            --text-muted: #a0978f;
+            --border: #e0d8d2;
+            --radius: 32px;
+            --shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+            --transition: all 0.15s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            max-width: 400px;
+            width: 100%;
+            border-radius: var(--radius);
+            padding: 35px 25px 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            min-height: 480px;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            width: 100%;
+        }
+        .screen.active {
+            display: flex;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: -0.3px;
+            line-height: 1.3;
+        }
+        h2 {
+            font-size: 34px;
+            font-weight: 700;
+            margin: 10px 0 0;
+            color: var(--text);
+        }
+        .sub {
+            font-size: 17px;
+            color: var(--text-light);
+            margin-top: -5px;
+            font-weight: 400;
+        }
+        .emoji-big {
+            font-size: 52px;
+            margin-bottom: 5px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            border: none;
+            border-radius: 60px;
+            padding: 15px 45px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            background: #f2edeb;
+            color: var(--text);
+            flex: 1;
+            min-width: 120px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:active {
+            background: var(--primary-dark);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--border);
+        }
+        .btn-small {
+            padding: 12px 20px;
+            font-size: 15px;
+            min-width: 80px;
+            flex: 0 1 auto;
+        }
+
+        .grid-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .option-item {
+            background: #f8f5f3;
+            border-radius: 18px;
+            padding: 14px 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            border: 2px solid transparent;
+            transition: var(--transition);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            line-height: 1.2;
+        }
+        .option-item span {
+            font-size: 26px;
+        }
+        .option-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .option-item:active {
+            transform: scale(0.94);
+        }
+
+        input[type="datetime-local"] {
+            border: 1.5px solid var(--border);
+            border-radius: 30px;
+            padding: 15px 20px;
+            font-size: 16px;
+            width: 100%;
+            background: #fcfaf9;
+            color: var(--text);
+            font-family: inherit;
+            outline: none;
+        }
+        input[type="datetime-local"]:focus {
+            border-color: var(--primary);
+        }
+
+        .hidden-btn {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #aaa;
+            background: none;
+            border: none;
+            text-decoration: underline;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+        .footnote {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+        .history-box {
+            background: #f8f5f3;
+            border-radius: 16px;
+            padding: 12px 16px;
+            font-size: 12px;
+            color: var(--text-light);
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            text-align: left;
+            margin-top: 10px;
+        }
+        .history-box .entry {
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .history-box .entry:last-child {
+            border-bottom: none;
+        }
+        .history-box .time {
+            color: var(--text-muted);
+            font-size: 10px;
+        }
+        .badge-yes {
+            color: #2e7d32;
+        }
+        .badge-no {
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card" id="app">
+
+    <!-- ЭКРАН 1: Приглашение -->
+    <div class="screen active" id="screen1">
+        <div class="emoji-big">☀️</div>
+        <h1>Саша, ты пойдёшь <br>со мной на свидание?</h1>
+        <div class="btn-group" style="margin-top: 15px;">
+            <button class="btn btn-primary" onclick="goYes()">Да</button>
+            <button class="btn btn-outline" onclick="goNo()">Нет</button>
+        </div>
+        <div style="margin-top: 25px; font-size: 14px; color: var(--text-muted);">* это просто приглашение, без давления :)</div>
+    </div>
+
+    <!-- ЭКРАН 2: Да / Нет -->
+    <div class="screen" id="screen2">
+        <div class="emoji-big" id="resultEmoji">❤️</div>
+        <h2 id="resultTitle">Когда ты свободна?</h2>
+        <p class="sub" id="resultSub">Выбери удобное время</p>
+        
+        <div id="noBlock" style="display:none;">
+            <p style="font-size: 18px; color: var(--text-light);">Ничего страшного, в следующий раз ✨</p>
+            <button class="btn btn-outline" style="margin-top:10px;" onclick="resetAll()">↺ Начать заново</button>
+        </div>
+
+        <div id="yesBlock" style="display:none; width:100%;">
+            <input type="datetime-local" id="datePicker" required>
+            <button class="btn btn-primary" style="margin-top: 15px; width:100%;" onclick="goPlace()">✅ Выбери дату</button>
+            <div class="footnote">В будни — после 18:00, в выходные — после 16:00</div>
+        </div>
+    </div>
+
+    <!-- ЭКРАН 3: Выбор места -->
+    <div class="screen" id="screen3">
+        <h2 style="font-size: 24px;">Куда пойдём?</h2>
+        <p class="sub">Выбирай, что тебе в кайф :)</p>
+        <div class="grid-options" id="placeGrid">
+            <div class="option-item" data-value="Парк" onclick="selectPlace(this)"><span>🌳</span> Парк</div>
+            <div class="option-item" data-value="Парк с альпаками" onclick="selectPlace(this)"><span>🦙</span> Альпаки</div>
+            <div class="option-item" data-value="Ресторан" onclick="selectPlace(this)"><span>🍽️</span> Ресторан</div>
+            <div class="option-item" data-value="Кинотеатр" onclick="selectPlace(this)"><span>🎬</span> Кино</div>
+            <div class="option-item" data-value="Картинг" onclick="selectPlace(this)"><span>🏎️</span> Картинг</div>
+            <div class="option-item" data-value="Кататься на великах" onclick="selectPlace(this)"><span>🚲</span> Велики</div>
+            <div class="option-item" data-value="Настольный теннис" onclick="selectPlace(this)"><span>🏓</span> Теннис</div>
+        </div>
+        <button class="btn btn-primary" style="width:100%; margin-top: 10px;" onclick="goFinal()">👉 Дальше</button>
+    </div>
+
+    <!-- ЭКРАН 4: Финал -->
+    <div class="screen" id="screen4">
+        <div class="emoji-big">😌</div>
+        <h2>Рад, что ты не отказалась</h2>
+        <p class="sub" id="finalDetails">Детали обсудим ближе к дате</p>
+        <div style="background: #f5f0ed; padding: 15px; border-radius: 30px; width:100%; margin: 10px 0; font-size: 14px; color: #4f4842;">
+            🌸 Я напишу тебе за пару дней до встречи
+        </div>
+        <button class="hidden-btn" id="adminBtn" onclick="showHistory()" style="display:none;">📊 Показать историю ответов</button>
+        <button class="btn btn-outline" style="margin-top:10px;" onclick="resetAll()">↺ Начать сначала</button>
+    </div>
+
+</div>
+
+<script>
+    // ===== ХРАНИЛИЩЕ =====
+    let currentAnswers = {
+        step1: null,
+        date: null,
+        place: null
+    };
+
+    const STORAGE_KEY = 'inviteHistory';
+
+    // ===== РАБОТА С ИСТОРИЕЙ =====
+    function getHistory() {
+        try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        } catch {
+            return [];
+        }
+    }
+
+    function saveHistory(entry) {
+        const history = getHistory();
+        history.push({
+            timestamp: new Date().toISOString(),
+            ...entry
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+    }
+
+    // ===== ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ =====
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    // ===== ЭКРАН 1 =====
+    function goYes() {
+        currentAnswers.step1 = 'yes';
+        showScreen('screen2');
+        document.getElementById('resultEmoji').textContent = '📅';
+        document.getElementById('resultTitle').textContent = 'Когда ты свободна?';
+        document.getElementById('resultSub').textContent = 'Выбери дату и время';
+        document.getElementById('noBlock').style.display = 'none';
+        document.getElementById('yesBlock').style.display = 'flex';
+        setupDatePicker();
+    }
+
+    function goNo() {
+        currentAnswers.step1 = 'no';
+        showScreen('screen2');
+        document.getElementById('resultEmoji').textContent = '😔';
+        document.getElementById('resultTitle').textContent = '#печалька';
+        document.getElementById('resultSub').textContent = '';
+        document.getElementById('noBlock').style.display = 'block';
+        document.getElementById('yesBlock').style.display = 'none';
+        // Сразу сохраняем отказ в историю
+        saveHistory({
+            step1: 'no',
+            date: null,
+            place: null
+        });
+        // Показываем кнопку админа (если есть ?admin)
+        checkAdmin();
+    }
+
+    // ===== ДАТА-ПИКЕР =====
+    function setupDatePicker() {
+        const picker = document.getElementById('datePicker');
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        picker.min = tomorrow.toISOString().slice(0, 16);
+
+        picker.addEventListener('change', function() {
+            const dt = new Date(this.value);
+            if (isNaN(dt.getTime())) return;
+            const day = dt.getDay();
+            const hours = dt.getHours();
+            let isValid = false;
+            if (day >= 1 && day <= 5 && hours >= 18) isValid = true;
+            else if ((day === 0 || day === 6) && hours >= 16) isValid = true;
+            if (!isValid) {
+                alert('⏰ В будни я свободен только после 18:00, а в выходные ты — после 16:00. Попробуй выбрать другое время.');
+                this.value = '';
+            } else {
+                currentAnswers.date = this.value;
+            }
+        });
+    }
+
+    // ===== ЭКРАН 3 =====
+    function goPlace() {
+        const picker = document.getElementById('datePicker');
+        if (!picker.value) {
+            alert('Пожалуйста, выбери дату и время 😊');
+            return;
+        }
+        currentAnswers.date = picker.value;
+        showScreen('screen3');
+        document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+        currentAnswers.place = null;
+    }
+
+    // ===== ВЫБОР МЕСТА =====
+    function selectPlace(el) {
+        document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
+        el.classList.add('selected');
+        currentAnswers.place = el.dataset.value;
+    }
+
+    // ===== ФИНАЛ =====
+    function goFinal() {
+        if (!currentAnswers.place) {
+            alert('Выбери одно место, куда хочешь пойти 😉');
+            return;
+        }
+
+        // Сохраняем ВСЕ ответы в историю
+        saveHistory({
+            step1: currentAnswers.step1,
+            date: currentAnswers.date,
+            place: currentAnswers.place
+        });
+
+        showScreen('screen4');
+
+        let dateStr = 'выбранной дате';
+        if (currentAnswers.date) {
+            const d = new Date(currentAnswers.date);
+            dateStr = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+        }
+        document.getElementById('finalDetails').textContent = `Детали обсудим ближе к ${dateStr}`;
+
+        checkAdmin();
+    }
+
+    // ===== АДМИН-ПАНЕЛЬ (ПОКАЗАТЬ ИСТОРИЮ) =====
+    function checkAdmin() {
+        if (window.location.search.includes('admin')) {
+            document.getElementById('adminBtn').style.display = 'block';
+        }
+    }
+
+    function showHistory() {
+        const history = getHistory();
+        if (history.length === 0) {
+            alert('📭 История пока пуста');
+            return;
+        }
+
+        let msg = '📊 ИСТОРИЯ ОТВЕТОВ САШИ\n';
+        msg += `Всего попыток: ${history.length}\n`;
+        msg += '═'.repeat(30) + '\n\n';
+
+        history.forEach((entry, index) => {
+            const date = new Date(entry.timestamp);
+            const dateStr = date.toLocaleString('ru-RU', {
+                day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+            });
+            msg += `#${index + 1} (${dateStr})\n`;
+            msg += `  Согласие: ${entry.step1 === 'yes' ? '✅ ДА' : '❌ НЕТ'}\n`;
+            if (entry.date) {
+                const d = new Date(entry.date);
+                msg += `  Дата: ${d.toLocaleString('ru-RU')}\n`;
+            }
+            if (entry.place) {
+                msg += `  Место: ${entry.place}\n`;
+            }
+            msg += '\n';
+        });
+
+        alert(msg);
+    }
+
+    // ===== СБРОС =====
+    function resetAll() {
+        if (confirm('Начать заново? (предыдущие ответы сохранятся в истории)')) {
+            currentAnswers = { step1: null, date: null, place: null };
+            document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+            document.getElementById('datePicker').value = '';
+            showScreen('screen1');
+        }
+    }
+
+    // ===== СТАРТ =====
+    window.onload = function() {
+        showScreen('screen1');
+        checkAdmin();
+    };
+</script>
+
+</body>
+</html>
