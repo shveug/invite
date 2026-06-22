@@ -131,47 +131,121 @@
         .btn-primary:active {
             background: #c9a89e;
         }
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .btn-primary:disabled:active {
+            transform: none;
+        }
         .btn-outline {
             background: transparent;
             border: 1.5px solid #dccfc8;
         }
-        .btn-small {
-            padding: 12px 20px;
-            font-size: 15px;
-            min-width: 80px;
-            flex: 0 1 auto;
-        }
 
-        /* ===== ДАТА-ПИКЕР ===== */
-        input[type="datetime-local"] {
-            border: 1.5px solid #e0d8d2;
-            border-radius: 30px;
-            padding: 15px 20px;
-            font-size: 16px;
+        /* ===== ВЫБОР ДАТЫ (НОВАЯ КАРТОЧКА) ===== */
+        .date-picker-card {
             width: 100%;
-            background: #fcfaf9;
-            color: #2d2a24;
-            font-family: inherit;
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
+            padding: 20px 24px;
+            background: #f8f3f0;
+            border-radius: 24px;
+            border: 2px dashed #dccfc8;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
         }
-        input[type="datetime-local"]:focus {
+        .date-picker-card:active {
+            transform: scale(0.97);
+        }
+        .date-picker-card.has-date {
+            border-style: solid;
             border-color: #dbb8ae;
+            background: #f5edea;
         }
-        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-            opacity: 0.5;
-            padding: 4px;
-        }
-
-        .btn-with-icon {
+        .date-picker-card .placeholder {
+            font-size: 18px;
+            color: #b0a098;
+            font-weight: 500;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 12px;
+        }
+        .date-picker-card .placeholder .icon {
+            font-size: 28px;
+        }
+        .date-picker-card .selected-date {
+            display: none;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d2a24;
             gap: 10px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .date-picker-card.has-date .placeholder {
+            display: none;
+        }
+        .date-picker-card.has-date .selected-date {
+            display: flex;
+        }
+        .date-picker-card .selected-date .emoji {
+            font-size: 24px;
+        }
+        .date-picker-card .selected-date .date-text {
+            background: white;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 15px;
+            color: #5a4f48;
+        }
+
+        /* Скрытый инпут */
+        #datePicker {
+            position: absolute;
+            opacity: 0;
             width: 100%;
-            padding: 16px 20px;
-            font-size: 17px;
+            height: 100%;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            border: none;
+            outline: none;
+        }
+        #datePicker::-webkit-calendar-picker-indicator {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .btn-confirm-date {
+            width: 100%;
+            padding: 16px;
+            border-radius: 60px;
+            border: none;
+            font-size: 18px;
+            font-weight: 600;
+            background: #e8ddd6;
+            color: #b0a098;
+            cursor: default;
+            transition: all 0.2s ease;
+            margin-top: 4px;
+        }
+        .btn-confirm-date.active {
+            background: #dbb8ae;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(219, 184, 174, 0.35);
+        }
+        .btn-confirm-date.active:active {
+            transform: scale(0.95);
         }
 
         /* ===== КАРУСЕЛЬ (СВАЙП) ===== */
@@ -284,11 +358,6 @@
             color: #c0392b;
             opacity: 0.7;
         }
-        .footnote {
-            font-size: 13px;
-            color: #b0a098;
-            margin-top: 5px;
-        }
 
         /* ===== АДАПТАЦИЯ ПОД IPHONE ===== */
         @media (max-width: 420px) {
@@ -302,7 +371,9 @@
             .place-card .icon { font-size: 36px; }
             .place-card .name { font-size: 18px; }
             .btn { padding: 14px 30px; font-size: 16px; min-width: 100px; }
-            .btn-with-icon { font-size: 16px; padding: 14px 16px; }
+            .date-picker-card { padding: 16px 18px; }
+            .date-picker-card .placeholder { font-size: 16px; }
+            .date-picker-card .selected-date { font-size: 16px; }
             .floating-emoji { display: none; }
         }
 
@@ -348,9 +419,22 @@
         </div>
 
         <div id="yesBlock" style="display:none; width:100%;">
-            <input type="datetime-local" id="datePicker" required>
-            <button class="btn btn-primary btn-with-icon" style="margin-top: 15px;" onclick="validateAndGoPlace()">
-                <span>📅</span> Выбери дату
+            <!-- НОВАЯ КАРТОЧКА ДЛЯ ВЫБОРА ДАТЫ -->
+            <div class="date-picker-card" id="datePickerCard" onclick="openDatePicker()">
+                <div class="placeholder">
+                    <span class="icon">📅</span>
+                    Тыкни сюда
+                </div>
+                <div class="selected-date">
+                    <span class="emoji">📌</span>
+                    <span id="selectedDateDisplay">—</span>
+                    <span class="date-text" id="selectedTimeDisplay">—</span>
+                </div>
+                <input type="datetime-local" id="datePicker" onchange="onDateSelected(this)">
+            </div>
+
+            <button class="btn-confirm-date" id="confirmDateBtn" onclick="confirmDate()">
+                Подтвердить ✅
             </button>
         </div>
     </div>
@@ -410,6 +494,8 @@
         place: null
     };
 
+    let selectedDateValue = null;
+
     const STORAGE_KEY = 'inviteHistory';
 
     // ===== РАБОТА С ИСТОРИЕЙ =====
@@ -449,7 +535,7 @@
         showScreen('screen2');
         document.getElementById('resultEmoji').textContent = '📅';
         document.getElementById('resultTitle').textContent = 'Когда ты свободна?';
-        document.getElementById('resultSub').textContent = 'Выбери дату и время';
+        document.getElementById('resultSub').textContent = 'Выбери удобное время';
         document.getElementById('noBlock').style.display = 'none';
         document.getElementById('yesBlock').style.display = 'flex';
         setupDatePicker();
@@ -471,52 +557,54 @@
         checkAdmin();
     }
 
-    // ===== ДАТА-ПИКЕР (без автоматической валидации) =====
+    // ===== ДАТА-ПИКЕР (НОВАЯ ЛОГИКА) =====
     function setupDatePicker() {
         const picker = document.getElementById('datePicker');
         const now = new Date();
         const tomorrow = new Date(now);
         tomorrow.setDate(tomorrow.getDate() + 1);
         picker.min = tomorrow.toISOString().slice(0, 16);
-        
-        // Очищаем значение, чтобы не было ложных срабатываний
         picker.value = '';
-        currentAnswers.date = null;
+        selectedDateValue = null;
+        updateDateDisplay();
+        updateConfirmBtn();
     }
 
-    // ===== ВАЛИДАЦИЯ ПРИ НАЖАТИИ КНОПКИ =====
-    function validateAndGoPlace() {
-        const picker = document.getElementById('datePicker');
-        const value = picker.value;
-        
+    function openDatePicker() {
+        document.getElementById('datePicker').showPicker?.() || document.getElementById('datePicker').click();
+    }
+
+    function onDateSelected(input) {
+        const value = input.value;
         if (!value) {
-            alert('Пожалуйста, выбери дату и время 😊');
+            selectedDateValue = null;
+            updateDateDisplay();
+            updateConfirmBtn();
             return;
         }
 
         const dt = new Date(value);
         if (isNaN(dt.getTime())) {
-            alert('Пожалуйста, выбери корректную дату 😊');
+            selectedDateValue = null;
+            updateDateDisplay();
+            updateConfirmBtn();
             return;
         }
 
-        const day = dt.getDay(); // 0=вс, 6=сб
+        // Валидация
+        const day = dt.getDay();
         const hours = dt.getHours();
         const minutes = dt.getMinutes();
-        
         let isValid = false;
         let errorMsg = '';
-        
-        // Будни (пн-пт): после 18:00
+
         if (day >= 1 && day <= 5) {
             if (hours > 18 || (hours === 18 && minutes >= 0)) {
                 isValid = true;
             } else {
                 errorMsg = '⏰ В будни я работаю до 18:00. Выбери время после 18:00 😊';
             }
-        }
-        // Выходные (сб-вс): после 16:00
-        else if (day === 0 || day === 6) {
+        } else if (day === 0 || day === 6) {
             if (hours > 16 || (hours === 16 && minutes >= 0)) {
                 isValid = true;
             } else {
@@ -526,11 +614,62 @@
 
         if (!isValid) {
             alert(errorMsg);
+            input.value = '';
+            selectedDateValue = null;
+            updateDateDisplay();
+            updateConfirmBtn();
             return;
         }
 
-        // Всё ок — сохраняем и переходим
-        currentAnswers.date = value;
+        // Всё ок
+        selectedDateValue = value;
+        updateDateDisplay();
+        updateConfirmBtn();
+    }
+
+    function updateDateDisplay() {
+        const card = document.getElementById('datePickerCard');
+        const display = document.getElementById('selectedDateDisplay');
+        const timeDisplay = document.getElementById('selectedTimeDisplay');
+
+        if (selectedDateValue) {
+            const dt = new Date(selectedDateValue);
+            const dateStr = dt.toLocaleDateString('ru-RU', { 
+                day: 'numeric', 
+                month: 'long',
+                weekday: 'short'
+            });
+            const timeStr = dt.toLocaleTimeString('ru-RU', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            display.textContent = dateStr;
+            timeDisplay.textContent = timeStr;
+            card.classList.add('has-date');
+        } else {
+            display.textContent = '—';
+            timeDisplay.textContent = '—';
+            card.classList.remove('has-date');
+        }
+    }
+
+    function updateConfirmBtn() {
+        const btn = document.getElementById('confirmDateBtn');
+        if (selectedDateValue) {
+            btn.classList.add('active');
+            btn.disabled = false;
+        } else {
+            btn.classList.remove('active');
+            btn.disabled = true;
+        }
+    }
+
+    function confirmDate() {
+        if (!selectedDateValue) {
+            alert('Пожалуйста, выбери дату и время 😊');
+            return;
+        }
+        currentAnswers.date = selectedDateValue;
         goPlace();
     }
 
@@ -737,9 +876,12 @@
         if (confirm('Начать заново?')) {
             currentAnswers = { step1: null, date: null, place: null };
             document.querySelectorAll('.place-card').forEach(el => el.classList.remove('selected'));
-            document.getElementById('datePicker').value = '';
+            selectedDateValue = null;
             selectedPlace = null;
             currentSlide = 0;
+            document.getElementById('datePicker').value = '';
+            updateDateDisplay();
+            updateConfirmBtn();
             if (document.getElementById('carouselTrack').children.length > 0) {
                 goToSlide(0);
             }
@@ -751,6 +893,8 @@
     window.onload = function() {
         showScreen('screen1');
         checkAdmin();
+        // Инициализируем состояние кнопки
+        updateConfirmBtn();
     };
 </script>
 
