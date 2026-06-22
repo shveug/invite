@@ -349,7 +349,7 @@
 
         <div id="yesBlock" style="display:none; width:100%;">
             <input type="datetime-local" id="datePicker" required>
-            <button class="btn btn-primary btn-with-icon" style="margin-top: 15px;" onclick="goPlace()">
+            <button class="btn btn-primary btn-with-icon" style="margin-top: 15px;" onclick="validateAndGoPlace()">
                 <span>📅</span> Выбери дату
             </button>
         </div>
@@ -471,49 +471,67 @@
         checkAdmin();
     }
 
-    // ===== ДАТА-ПИКЕР (с ограничениями без подсказок) =====
+    // ===== ДАТА-ПИКЕР (без автоматической валидации) =====
     function setupDatePicker() {
         const picker = document.getElementById('datePicker');
         const now = new Date();
         const tomorrow = new Date(now);
         tomorrow.setDate(tomorrow.getDate() + 1);
         picker.min = tomorrow.toISOString().slice(0, 16);
+        
+        // Очищаем значение, чтобы не было ложных срабатываний
+        picker.value = '';
+        currentAnswers.date = null;
+    }
 
-        // Устанавливаем значение по умолчанию (завтра в 18:00, если будни)
-        const defaultDate = new Date(tomorrow);
-        const day = defaultDate.getDay();
-        let defaultHours = 18;
-        if (day === 0 || day === 6) defaultHours = 16;
-        defaultDate.setHours(defaultHours, 0, 0, 0);
-        picker.value = defaultDate.toISOString().slice(0, 16);
-        currentAnswers.date = picker.value;
+    // ===== ВАЛИДАЦИЯ ПРИ НАЖАТИИ КНОПКИ =====
+    function validateAndGoPlace() {
+        const picker = document.getElementById('datePicker');
+        const value = picker.value;
+        
+        if (!value) {
+            alert('Пожалуйста, выбери дату и время 😊');
+            return;
+        }
 
-        picker.addEventListener('change', function() {
-            const dt = new Date(this.value);
-            if (isNaN(dt.getTime())) return;
-            const day = dt.getDay();
-            const hours = dt.getHours();
-            let isValid = false;
-            if (day >= 1 && day <= 5 && hours >= 18) isValid = true;
-            else if ((day === 0 || day === 6) && hours >= 16) isValid = true;
-            if (!isValid) {
-                alert('⏰ Это время недоступно. Выбери другое 😊');
-                // Возвращаем предыдущее значение
-                const prev = currentAnswers.date;
-                if (prev) this.value = prev;
-                else {
-                    const d = new Date();
-                    d.setDate(d.getDate() + 1);
-                    const day2 = d.getDay();
-                    let h = 18;
-                    if (day2 === 0 || day2 === 6) h = 16;
-                    d.setHours(h, 0, 0, 0);
-                    this.value = d.toISOString().slice(0, 16);
-                }
+        const dt = new Date(value);
+        if (isNaN(dt.getTime())) {
+            alert('Пожалуйста, выбери корректную дату 😊');
+            return;
+        }
+
+        const day = dt.getDay(); // 0=вс, 6=сб
+        const hours = dt.getHours();
+        const minutes = dt.getMinutes();
+        
+        let isValid = false;
+        let errorMsg = '';
+        
+        // Будни (пн-пт): после 18:00
+        if (day >= 1 && day <= 5) {
+            if (hours > 18 || (hours === 18 && minutes >= 0)) {
+                isValid = true;
             } else {
-                currentAnswers.date = this.value;
+                errorMsg = '⏰ В будни я работаю до 18:00. Выбери время после 18:00 😊';
             }
-        });
+        }
+        // Выходные (сб-вс): после 16:00
+        else if (day === 0 || day === 6) {
+            if (hours > 16 || (hours === 16 && minutes >= 0)) {
+                isValid = true;
+            } else {
+                errorMsg = '⏰ В выходные ты свободна после 16:00. Выбери время позже 😊';
+            }
+        }
+
+        if (!isValid) {
+            alert(errorMsg);
+            return;
+        }
+
+        // Всё ок — сохраняем и переходим
+        currentAnswers.date = value;
+        goPlace();
     }
 
     // ===== ЭКРАН 3: КАРУСЕЛЬ =====
@@ -540,7 +558,6 @@
             dots.appendChild(dot);
         });
 
-        // Обновляем состояние кнопки
         updateSelectBtn();
         updateDots();
 
@@ -568,7 +585,7 @@
             isDragging = false;
         });
 
-        // Поддержка мыши (для десктопа)
+        // Поддержка мыши
         let mouseDown = false;
         let mouseStartX = 0;
         wrapper.addEventListener('mousedown', (e) => {
@@ -597,11 +614,9 @@
         currentSlide = index;
         track.style.transform = `translateX(-${index * 100}%)`;
         updateDots();
-        // Подсвечиваем выбранное место
         document.querySelectorAll('.place-card').forEach((card, i) => {
             card.classList.toggle('selected', i === index);
         });
-        // Если есть выбранное место, сохраняем его
         selectedPlace = places[index];
         currentAnswers.place = selectedPlace.name;
         updateSelectBtn();
@@ -646,18 +661,10 @@
     }
 
     function goPlace() {
-        const picker = document.getElementById('datePicker');
-        if (!picker.value) {
-            alert('Пожалуйста, выбери дату и время 😊');
-            return;
-        }
-        currentAnswers.date = picker.value;
         showScreen('screen3');
-        // Инициализируем карусель (если ещё не инициализирована)
         if (document.getElementById('carouselTrack').children.length === 0) {
             initCarousel();
         } else {
-            // Сбрасываем выделение
             document.querySelectorAll('.place-card').forEach(c => c.classList.remove('selected'));
             selectedPlace = null;
             currentAnswers.place = null;
@@ -725,7 +732,7 @@
         alert(msg);
     }
 
-    // ===== СБРОС (без лишнего текста) =====
+    // ===== СБРОС =====
     function resetAll() {
         if (confirm('Начать заново?')) {
             currentAnswers = { step1: null, date: null, place: null };
