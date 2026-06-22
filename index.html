@@ -583,7 +583,7 @@
 
     // ===== GOOGLE SHEETS =====
     // ⚠️ ЗАМЕНИ НА СВОЙ URL ОТ APPS SCRIPT
-    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzSQLK1BuFvMOUxTc1IhGCK6W3tNp-ecgXbiqN-1ghW4NWVFmGs7B0H19V-UcSBmvVl/exec/exec';
+    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzSQLK1BuFvMOUxTc1IhGCK6W3tNp-ecgXbiqN-1ghW4NWVFmGs7B0H19V-UcSBmvVl/exec';
 
     // ===== РАБОТА С ИСТОРИЕЙ (ЛОКАЛЬНО) =====
     function getHistory() {
@@ -681,7 +681,7 @@
         checkAdmin();
     }
 
-    // ===== ДАТА-ПИКЕР =====
+    // ===== ДАТА-ПИКЕР (БЕЗ ДВОЙНОЙ ВАЛИДАЦИИ) =====
     function setupDatePicker() {
         const picker = document.getElementById('datePicker');
         const now = new Date();
@@ -703,8 +703,11 @@
         }
     }
 
+    // ===== ВАЛИДАЦИЯ ТОЛЬКО ПРИ ВЫБОРЕ (ОДНО ПРЕДУПРЕЖДЕНИЕ) =====
     function onDateSelected(input) {
         const value = input.value;
+        
+        // Если ничего не выбрано — сбрасываем
         if (!value) {
             selectedDateValue = null;
             updateDateDisplay();
@@ -720,29 +723,13 @@
             return;
         }
 
-        // Валидация
-        const day = dt.getDay();
-        const hours = dt.getHours();
-        const minutes = dt.getMinutes();
-        let isValid = false;
-        let errorMsg = '';
-
-        if (day >= 1 && day <= 5) {
-            if (hours > 18 || (hours === 18 && minutes >= 0)) {
-                isValid = true;
-            } else {
-                errorMsg = '⏰ В будни я работаю до 18:00. Выбери время после 18:00 😊';
-            }
-        } else if (day === 0 || day === 6) {
-            if (hours > 16 || (hours === 16 && minutes >= 0)) {
-                isValid = true;
-            } else {
-                errorMsg = '⏰ В выходные ты свободна после 16:00. Выбери время позже 😊';
-            }
-        }
-
-        if (!isValid) {
-            alert(errorMsg);
+        // Проверяем, что дата валидна
+        const validation = validateDateTime(dt);
+        
+        if (!validation.isValid) {
+            // Показываем одно предупреждение
+            alert(validation.errorMsg);
+            // Сбрасываем поле
             input.value = '';
             selectedDateValue = null;
             updateDateDisplay();
@@ -750,9 +737,42 @@
             return;
         }
 
+        // Всё хорошо — сохраняем
         selectedDateValue = value;
         updateDateDisplay();
         updateConfirmBtn();
+    }
+
+    // ===== ФУНКЦИЯ ВАЛИДАЦИИ (ВЫНЕСЕНА ОТДЕЛЬНО) =====
+    function validateDateTime(dt) {
+        const day = dt.getDay(); // 0=вс, 6=сб
+        const hours = dt.getHours();
+        const minutes = dt.getMinutes();
+        
+        // Будни (пн-пт): после 18:00
+        if (day >= 1 && day <= 5) {
+            if (hours > 18 || (hours === 18 && minutes >= 0)) {
+                return { isValid: true };
+            } else {
+                return { 
+                    isValid: false, 
+                    errorMsg: '⏰ В будни я работаю до 18:00. Выбери время после 18:00 😊' 
+                };
+            }
+        }
+        // Выходные (сб-вс): после 16:00
+        else if (day === 0 || day === 6) {
+            if (hours > 16 || (hours === 16 && minutes >= 0)) {
+                return { isValid: true };
+            } else {
+                return { 
+                    isValid: false, 
+                    errorMsg: '⏰ В выходные ты свободна после 16:00. Выбери время позже 😊' 
+                };
+            }
+        }
+        
+        return { isValid: false, errorMsg: '❌ Неизвестный день недели' };
     }
 
     function updateDateDisplay() {
@@ -792,6 +812,7 @@
         }
     }
 
+    // ===== ПОДТВЕРЖДЕНИЕ ДАТЫ (БЕЗ ПОВТОРНОЙ ВАЛИДАЦИИ) =====
     function confirmDate() {
         if (!selectedDateValue) {
             alert('Пожалуйста, выбери дату и время 😊');
