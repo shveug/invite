@@ -297,7 +297,8 @@
                     <span id="selectedDateDisplay">—</span>
                     <span class="date-text" id="selectedTimeDisplay">—</span>
                 </div>
-                <input type="datetime-local" id="datePicker">
+                <!-- Убираем onchange и добавляем input для отслеживания -->
+                <input type="datetime-local" id="datePicker" oninput="updateSelectedDate()">
             </div>
             <button class="btn-confirm-date" id="confirmDateBtn" onclick="confirmDate()">Подтвердить ✅</button>
         </div>
@@ -441,7 +442,7 @@
         checkAdmin();
     }
 
-    // ===== ДАТА-ПИКЕР (БЕЗ АВТОМАТИЧЕСКОЙ ОШИБКИ) =====
+    // ===== ДАТА-ПИКЕР (НОВАЯ ЛОГИКА — БЕЗ АВТОМАТИЧЕСКИХ ОШИБОК) =====
     function setupDatePicker() {
         const picker = document.getElementById('datePicker');
         const now = new Date();
@@ -452,20 +453,11 @@
         minDate.setHours(0, 0, 0, 0);
         picker.min = minDate.toISOString().slice(0, 16);
         
-        // НЕ ставим значение по умолчанию
+        // Очищаем значение
         picker.value = '';
         selectedDateValue = null;
         updateDateDisplay();
         updateConfirmBtn();
-        
-        // Убираем автоматическую валидацию
-        picker.removeEventListener('change', onDateSelected);
-        picker.addEventListener('change', function(e) {
-            // Проверяем, что значение действительно выбрано пользователем
-            if (this.value) {
-                onDateSelected(this);
-            }
-        });
     }
 
     function openDatePicker() {
@@ -474,8 +466,10 @@
         else picker.click();
     }
 
-    function onDateSelected(input) {
-        const value = input.value;
+    // ===== НОВАЯ ФУНКЦИЯ: ТОЛЬКО ПОКАЗЫВАЕМ ВЫБРАННУЮ ДАТУ, БЕЗ ВАЛИДАЦИИ =====
+    function updateSelectedDate() {
+        const picker = document.getElementById('datePicker');
+        const value = picker.value;
         
         if (!value) {
             selectedDateValue = null;
@@ -492,45 +486,7 @@
             return;
         }
 
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const selectedDay = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        
-        // Проверяем, что дата не раньше завтра
-        if (selectedDay < tomorrow) {
-            alert('❌ Нельзя выбрать вчерашний или сегодняшний день! Выбери завтра или позже 😊');
-            input.value = '';
-            selectedDateValue = null;
-            updateDateDisplay();
-            updateConfirmBtn();
-            return;
-        }
-
-        // Проверяем время (будни/выходные)
-        const day = dt.getDay();
-        const hours = dt.getHours();
-        let isValid = false;
-        let errorMsg = '';
-
-        if (day >= 1 && day <= 5) {
-            if (hours >= 18) isValid = true;
-            else errorMsg = '⏰ В будни я работаю до 18:00. Выбери время после 18:00 😊';
-        } else if (day === 0 || day === 6) {
-            if (hours >= 16) isValid = true;
-            else errorMsg = '⏰ В выходные ты свободна после 16:00. Выбери время позже 😊';
-        }
-
-        if (!isValid) {
-            alert(errorMsg);
-            input.value = '';
-            selectedDateValue = null;
-            updateDateDisplay();
-            updateConfirmBtn();
-            return;
-        }
-
+        // Просто показываем выбранную дату (без проверок!)
         selectedDateValue = value;
         updateDateDisplay();
         updateConfirmBtn();
@@ -566,11 +522,56 @@
         }
     }
 
+    // ===== ВАЛИДАЦИЯ ТОЛЬКО ПРИ НАЖАТИИ "ПОДТВЕРДИТЬ" =====
     function confirmDate() {
         if (!selectedDateValue) {
             alert('Пожалуйста, выбери дату и время 😊');
             return;
         }
+
+        const dt = new Date(selectedDateValue);
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const selectedDay = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        // Проверка: дата не раньше завтра
+        if (selectedDay < tomorrow) {
+            alert('❌ Нельзя выбрать вчерашний или сегодняшний день! Выбери завтра или позже 😊');
+            // Сбрасываем
+            document.getElementById('datePicker').value = '';
+            selectedDateValue = null;
+            updateDateDisplay();
+            updateConfirmBtn();
+            return;
+        }
+
+        // Проверка времени (будни/выходные)
+        const day = dt.getDay();
+        const hours = dt.getHours();
+        let isValid = false;
+        let errorMsg = '';
+
+        if (day >= 1 && day <= 5) {
+            if (hours >= 18) isValid = true;
+            else errorMsg = '⏰ В будни я работаю до 18:00. Выбери время после 18:00 😊';
+        } else if (day === 0 || day === 6) {
+            if (hours >= 16) isValid = true;
+            else errorMsg = '⏰ В выходные ты свободна после 16:00. Выбери время позже 😊';
+        }
+
+        if (!isValid) {
+            alert(errorMsg);
+            // Сбрасываем
+            document.getElementById('datePicker').value = '';
+            selectedDateValue = null;
+            updateDateDisplay();
+            updateConfirmBtn();
+            return;
+        }
+
+        // Всё хорошо — переходим к выбору места
         currentAnswers.date = selectedDateValue;
         goPlace();
     }
