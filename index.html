@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Приглашение</title>
     <style>
-        /* ===== ОСНОВНЫЕ СТИЛИ ===== */
+        /* ===== ВСЕ СТИЛИ ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ ===== */
         * {
             margin: 0;
             padding: 0;
@@ -29,7 +29,6 @@
             position: relative;
         }
 
-        /* ===== ПЛАВАЮЩИЕ ЭМОДЗИ (фон) ===== */
         .floating-emojis {
             position: fixed;
             top: 0;
@@ -66,7 +65,6 @@
             75% { transform: translateY(16px) rotate(-4deg) scale(0.92); }
         }
 
-        /* ===== КАРТОЧКА ===== */
         .card {
             background: rgba(255, 255, 255, 0.70);
             backdrop-filter: blur(8px);
@@ -123,7 +121,6 @@
             letter-spacing: 1px;
         }
 
-        /* ===== КНОПКИ ===== */
         .btn-group {
             display: flex;
             gap: 15px;
@@ -182,7 +179,6 @@
             background: #92b3a6;
         }
 
-        /* ===== ВЫБОР ДАТЫ (КАРТОЧКА) ===== */
         .date-picker-card {
             width: 100%;
             padding: 20px 24px;
@@ -243,7 +239,6 @@
             color: #5a4f48;
         }
 
-        /* Скрытый инпут */
         #datePicker {
             position: absolute;
             opacity: 0;
@@ -289,7 +284,6 @@
             transform: scale(0.95);
         }
 
-        /* ===== КАРУСЕЛЬ (СВАЙП) ===== */
         .carousel-wrapper {
             width: 100%;
             overflow: hidden;
@@ -361,7 +355,6 @@
             border-radius: 4px;
         }
 
-        /* ===== КНОПКА "СЮДАААА" ===== */
         .btn-select-place {
             width: 100%;
             padding: 16px;
@@ -385,7 +378,6 @@
             transform: scale(0.95);
         }
 
-        /* ===== АДМИН-КНОПКИ ===== */
         .hidden-btn {
             margin-top: 8px;
             font-size: 12px;
@@ -409,7 +401,6 @@
             margin: 8px 0;
         }
 
-        /* ===== АДАПТАЦИЯ ПОД IPHONE ===== */
         @media (max-width: 420px) {
             .card {
                 padding: 25px 18px 25px;
@@ -440,7 +431,6 @@
 </head>
 <body>
 
-<!-- ===== ПЛАВАЮЩИЕ ЭМОДЗИ (фон) ===== -->
 <div class="floating-emojis">
     <span>☀️</span>
     <span>🌸</span>
@@ -458,7 +448,6 @@
 
 <div class="card" id="app">
 
-    <!-- ===== ЭКРАН 1: Приглашение ===== -->
     <div class="screen active" id="screen1">
         <div class="emoji-big">☀️</div>
         <h1>Саша, ты пойдёшь <br>со мной на свидание?</h1>
@@ -469,7 +458,6 @@
         <div style="margin-top: 25px; font-size: 14px; color: #b0a098;">* это просто приглашение, без давления :)</div>
     </div>
 
-    <!-- ===== ЭКРАН 1.5: ПРОМЕЖУТОЧНЫЙ (ПЕРЕСПРОС) ===== -->
     <div class="screen" id="screen1_5">
         <div class="emoji-big">🤭</div>
         <div class="hashtag">#замечательно</div>
@@ -482,7 +470,6 @@
         </button>
     </div>
 
-    <!-- ===== ЭКРАН 2: Да / Нет ===== -->
     <div class="screen" id="screen2">
         <div class="emoji-big" id="resultEmoji">❤️</div>
         <h2 id="resultTitle">Когда ты свободна?</h2>
@@ -513,15 +500,12 @@
         </div>
     </div>
 
-    <!-- ===== ЭКРАН 3: Выбор места (Карусель) ===== -->
     <div class="screen" id="screen3">
         <h2 style="font-size: 24px;">Куда пойдём?</h2>
         <p class="sub">Выбирай, что тебе в кайф :)</p>
 
         <div class="carousel-wrapper">
-            <div class="carousel-track" id="carouselTrack">
-                <!-- Слайды заполняются из JS -->
-            </div>
+            <div class="carousel-track" id="carouselTrack"></div>
         </div>
 
         <div class="carousel-dots" id="carouselDots"></div>
@@ -531,7 +515,6 @@
         </button>
     </div>
 
-    <!-- ===== ЭКРАН 4: Финал ===== -->
     <div class="screen" id="screen4">
         <div class="emoji-big">😌</div>
         <h2>Рад, что ты не отказалась</h2>
@@ -540,7 +523,6 @@
             🌸 Я напишу тебе за пару дней до встречи
         </div>
         
-        <!-- НОВАЯ КНОПКА "ЗАВЕРШИТЬ" -->
         <button class="btn btn-success" style="width:100%;" onclick="finishAndSave()">
             Завершить ✅
         </button>
@@ -555,7 +537,6 @@
 </div>
 
 <script>
-    // ===== ДАННЫЕ ДЛЯ КАРУСЕЛИ =====
     const places = [
         { id: 'park', icon: '🌳', name: 'Парк', desc: 'Подышим воздухом' },
         { id: 'alpaca', icon: '🦙', name: 'Парк с альпаками', desc: 'Они такие милые!' },
@@ -569,7 +550,6 @@
     let currentSlide = 0;
     let selectedPlace = null;
 
-    // ===== ХРАНИЛИЩЕ =====
     let currentAnswers = {
         step1: null,
         date: null,
@@ -581,11 +561,9 @@
 
     const STORAGE_KEY = 'inviteHistory';
 
-    // ===== GOOGLE SHEETS =====
-    // ⚠️ ЗАМЕНИ НА СВОЙ URL ОТ APPS SCRIPT
-    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzSQLK1BuFvMOUxTc1IhGCK6W3tNp-ecgXbiqN-1ghW4NWVFmGs7B0H19V-UcSBmvVl/exec';
+    // ⚠️ ЗАМЕНИ НА СВОЙ URL
+    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzSQLK1BuFvMOUxTc1IhGCK6W3tNp-ecgXbiqN-1ghW4NWVFmGs7B0H19V-UcSBmvVl/exec';
 
-    // ===== РАБОТА С ИСТОРИЕЙ (ЛОКАЛЬНО) =====
     function getHistory() {
         try {
             return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -610,15 +588,17 @@
         }
     }
 
-    // ===== ОТПРАВКА В GOOGLE SHEETS =====
     function sendToGoogleSheets(data) {
+        // Используем form-data для надёжности
+        const formData = new FormData();
+        formData.append('step1', data.step1);
+        formData.append('date', data.date || '');
+        formData.append('place', data.place || '');
+        
         fetch(GOOGLE_SHEETS_URL, {
             method: 'POST',
             mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
+            body: formData
         })
         .then(() => {
             console.log('✅ Данные отправлены в Google Sheets');
@@ -628,13 +608,11 @@
         });
     }
 
-    // ===== ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ =====
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
         document.getElementById(id).classList.add('active');
     }
 
-    // ===== ЭКРАН 1 =====
     function goYes() {
         showScreen('screen1_5');
     }
@@ -664,14 +642,12 @@
         document.getElementById('noBlock').style.display = 'block';
         document.getElementById('yesBlock').style.display = 'none';
         
-        // Отправляем в Google Sheets
         sendToGoogleSheets({
             step1: 'no',
             date: null,
             place: null
         });
         
-        // Сохраняем локально
         saveHistory({
             step1: 'no',
             date: null,
@@ -681,12 +657,12 @@
         checkAdmin();
     }
 
-    // ===== ДАТА-ПИКЕР (БЕЗ ДВОЙНОЙ ВАЛИДАЦИИ) =====
     function setupDatePicker() {
         const picker = document.getElementById('datePicker');
         const now = new Date();
         const tomorrow = new Date(now);
         tomorrow.setDate(tomorrow.getDate() + 1);
+        // Устанавливаем минимальную дату - завтра
         picker.min = tomorrow.toISOString().slice(0, 16);
         picker.value = '';
         selectedDateValue = null;
@@ -703,11 +679,9 @@
         }
     }
 
-    // ===== ВАЛИДАЦИЯ ТОЛЬКО ПРИ ВЫБОРЕ (ОДНО ПРЕДУПРЕЖДЕНИЕ) =====
     function onDateSelected(input) {
         const value = input.value;
         
-        // Если ничего не выбрано — сбрасываем
         if (!value) {
             selectedDateValue = null;
             updateDateDisplay();
@@ -723,13 +697,66 @@
             return;
         }
 
-        // Проверяем, что дата валидна
-        const validation = validateDateTime(dt);
+        // ===== ВАЛИДАЦИЯ С УЧЁТОМ СЕГОДНЯШНЕГО ДНЯ =====
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const selectedDay = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
         
-        if (!validation.isValid) {
-            // Показываем одно предупреждение
-            alert(validation.errorMsg);
-            // Сбрасываем поле
+        // Проверяем, что дата не раньше сегодня
+        if (selectedDay < today) {
+            alert('❌ Нельзя выбрать вчерашний день! Выбери сегодня или позже 😊');
+            input.value = '';
+            selectedDateValue = null;
+            updateDateDisplay();
+            updateConfirmBtn();
+            return;
+        }
+        
+        // Проверяем, что дата не раньше завтра (если сегодня уже поздно)
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        // Если сегодня и время уже прошло
+        if (selectedDay.getTime() === today.getTime()) {
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const selectedHours = dt.getHours();
+            const selectedMinutes = dt.getMinutes();
+            
+            // Если выбранное время уже прошло сегодня
+            if (selectedHours < currentHours || (selectedHours === currentHours && selectedMinutes < currentMinutes)) {
+                alert('⏰ Это время уже прошло сегодня! Выбери время позже или завтра 😊');
+                input.value = '';
+                selectedDateValue = null;
+                updateDateDisplay();
+                updateConfirmBtn();
+                return;
+            }
+        }
+
+        // Проверяем время (будни/выходные)
+        const day = dt.getDay();
+        const hours = dt.getHours();
+        const minutes = dt.getMinutes();
+        let isValid = false;
+        let errorMsg = '';
+
+        if (day >= 1 && day <= 5) {
+            if (hours > 18 || (hours === 18 && minutes >= 0)) {
+                isValid = true;
+            } else {
+                errorMsg = '⏰ В будни я работаю до 18:00. Выбери время после 18:00 😊';
+            }
+        } else if (day === 0 || day === 6) {
+            if (hours > 16 || (hours === 16 && minutes >= 0)) {
+                isValid = true;
+            } else {
+                errorMsg = '⏰ В выходные ты свободна после 16:00. Выбери время позже 😊';
+            }
+        }
+
+        if (!isValid) {
+            alert(errorMsg);
             input.value = '';
             selectedDateValue = null;
             updateDateDisplay();
@@ -737,42 +764,10 @@
             return;
         }
 
-        // Всё хорошо — сохраняем
+        // Всё хорошо
         selectedDateValue = value;
         updateDateDisplay();
         updateConfirmBtn();
-    }
-
-    // ===== ФУНКЦИЯ ВАЛИДАЦИИ (ВЫНЕСЕНА ОТДЕЛЬНО) =====
-    function validateDateTime(dt) {
-        const day = dt.getDay(); // 0=вс, 6=сб
-        const hours = dt.getHours();
-        const minutes = dt.getMinutes();
-        
-        // Будни (пн-пт): после 18:00
-        if (day >= 1 && day <= 5) {
-            if (hours > 18 || (hours === 18 && minutes >= 0)) {
-                return { isValid: true };
-            } else {
-                return { 
-                    isValid: false, 
-                    errorMsg: '⏰ В будни я работаю до 18:00. Выбери время после 18:00 😊' 
-                };
-            }
-        }
-        // Выходные (сб-вс): после 16:00
-        else if (day === 0 || day === 6) {
-            if (hours > 16 || (hours === 16 && minutes >= 0)) {
-                return { isValid: true };
-            } else {
-                return { 
-                    isValid: false, 
-                    errorMsg: '⏰ В выходные ты свободна после 16:00. Выбери время позже 😊' 
-                };
-            }
-        }
-        
-        return { isValid: false, errorMsg: '❌ Неизвестный день недели' };
     }
 
     function updateDateDisplay() {
@@ -812,7 +807,6 @@
         }
     }
 
-    // ===== ПОДТВЕРЖДЕНИЕ ДАТЫ (БЕЗ ПОВТОРНОЙ ВАЛИДАЦИИ) =====
     function confirmDate() {
         if (!selectedDateValue) {
             alert('Пожалуйста, выбери дату и время 😊');
@@ -822,7 +816,6 @@
         goPlace();
     }
 
-    // ===== ЭКРАН 3: КАРУСЕЛЬ =====
     function initCarousel() {
         const track = document.getElementById('carouselTrack');
         const dots = document.getElementById('carouselDots');
@@ -849,7 +842,6 @@
         updateSelectBtn();
         updateDots();
 
-        // Поддержка тач-свайпа
         let startX = 0;
         let isDragging = false;
         const wrapper = document.querySelector('.carousel-wrapper');
@@ -873,7 +865,6 @@
             isDragging = false;
         });
 
-        // Поддержка мыши
         let mouseDown = false;
         let mouseStartX = 0;
         wrapper.addEventListener('mousedown', (e) => {
@@ -961,7 +952,6 @@
         }
     }
 
-    // ===== ФИНАЛ =====
     function goFinal() {
         showScreen('screen4');
 
@@ -975,7 +965,6 @@
         checkAdmin();
     }
 
-    // ===== ФУНКЦИЯ "ЗАВЕРШИТЬ" =====
     function finishAndSave() {
         if (isFinished) {
             alert('Ты уже завершила опрос 😊');
@@ -987,17 +976,14 @@
             return;
         }
         
-        // Подготавливаем данные для отправки
         const dataToSend = {
             step1: currentAnswers.step1,
             date: currentAnswers.date || null,
             place: currentAnswers.place || null
         };
         
-        // Отправляем в Google Sheets
         sendToGoogleSheets(dataToSend);
         
-        // Сохраняем локально (для резерва)
         saveHistory({
             step1: currentAnswers.step1,
             date: currentAnswers.date,
@@ -1015,7 +1001,6 @@
         finishBtn.onclick = null;
     }
 
-    // ===== АДМИН-ПАНЕЛЬ (только локально) =====
     function checkAdmin() {
         if (window.location.search.includes('admin')) {
             document.getElementById('adminBtn').style.display = 'block';
@@ -1054,7 +1039,6 @@
         alert(msg + '\n\n📌 ВСЕ ОТВЕТЫ СМОТРИ В GOOGLE ТАБЛИЦЕ!');
     }
 
-    // ===== СБРОС =====
     function resetAll() {
         if (confirm('Начать заново?')) {
             currentAnswers = { step1: null, date: null, place: null };
@@ -1069,7 +1053,6 @@
             if (document.getElementById('carouselTrack').children.length > 0) {
                 goToSlide(0);
             }
-            // Восстанавливаем кнопку "Завершить"
             const finishBtn = document.querySelector('.btn-success');
             finishBtn.textContent = 'Завершить ✅';
             finishBtn.style.background = '#a8c4b8';
@@ -1079,7 +1062,6 @@
         }
     }
 
-    // ===== СТАРТ =====
     window.onload = function() {
         showScreen('screen1');
         checkAdmin();
